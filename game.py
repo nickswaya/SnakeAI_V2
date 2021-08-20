@@ -37,12 +37,11 @@ class SnakeGameAI:
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
-        self.wall_cords = (random.randint(0, self.w), random.randint(0, self.h), BLOCK_SIZE*random.randint(3, 6), BLOCK_SIZE*random.randint(3,6)) 
+        self.wall_cords = (random.choice(np.arange(0, self.w, 20)), random.choice(np.arange(0, self.h, 20)), BLOCK_SIZE*random.randint(3, 6), BLOCK_SIZE*random.randint(3,6)) 
         self.head1 = pygame.draw.rect(self.display, BLUE1, pygame.Rect(self.snake[0].x, self.snake[0].y, BLOCK_SIZE, BLOCK_SIZE))
         self.head2 = pygame.draw.rect(self.display, BLUE2, pygame.Rect(self.snake[0].x+4, self.snake[0].y+4, 12, 12))
-        self.collided = False
         self.wall = pygame.draw.rect(self.display, LIME, pygame.Rect(self.wall_cords))
-        
+        # self.reset()
     def reset(self):
         self.collided = False
         # init game state
@@ -59,6 +58,7 @@ class SnakeGameAI:
         self.frame_iteration = 0
 
     def _place_food(self):
+        food_wall_overlap = False
         x = random.randint(0, (self.w-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE 
         y = random.randint(0, (self.h-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE
         self.food = Point(x, y)
@@ -108,17 +108,13 @@ class SnakeGameAI:
         if pt in self.snake[1:]:
             return True
         #hits wall
-        self.collide = self.wall.collidepoint(pt.x, pt.y)
-
-        # self.collide = self.head1.colliderect(self.wall)
-        if self.collide:
-            self.collided = True
+        self.collided = self.wall.collidepoint(pt.x, pt.y)
+        if self.collided == True:
             return True
-            
+
         return False
         
     def _update_ui(self):
-        self.collide = False
         self.display.fill(BLACK)
         #draw and name head
         self.head1 = pygame.draw.rect(self.display, BLUE1, pygame.Rect(self.snake[0].x, self.snake[0].y, BLOCK_SIZE, BLOCK_SIZE))
@@ -135,6 +131,7 @@ class SnakeGameAI:
             color = LIME
         else:
             color = RED
+
         self.wall = pygame.draw.rect(self.display, color, pygame.Rect(self.wall_cords))
 
         text = font.render("Score: " + str(self.score), True, WHITE)
