@@ -108,13 +108,17 @@ class SnakeGameAI:
         if pt in self.snake[1:]:
             return True
         #hits wall
-        collide = self.head1.colliderect(self.wall)
-        if collide:
+        self.collide = self.wall.collidepoint(pt.x, pt.y)
+
+        # self.collide = self.head1.colliderect(self.wall)
+        if self.collide:
             self.collided = True
+            return True
             
         return False
         
     def _update_ui(self):
+        self.collide = False
         self.display.fill(BLACK)
         #draw and name head
         self.head1 = pygame.draw.rect(self.display, BLUE1, pygame.Rect(self.snake[0].x, self.snake[0].y, BLOCK_SIZE, BLOCK_SIZE))
