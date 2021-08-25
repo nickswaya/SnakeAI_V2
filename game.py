@@ -36,8 +36,8 @@ class SnakeGameAI:
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
-        self.reset()
         self.wall_cords = (random.choice(np.arange(0, self.w, 20)), random.choice(np.arange(0, self.h, 20)), BLOCK_SIZE*random.randint(3, 6), BLOCK_SIZE*random.randint(3,6)) 
+        self.reset()
         self.head1 = pygame.draw.rect(self.display, BLUE1, pygame.Rect(self.snake[0].x, self.snake[0].y, BLOCK_SIZE, BLOCK_SIZE))
         self.head2 = pygame.draw.rect(self.display, BLUE2, pygame.Rect(self.snake[0].x+4, self.snake[0].y+4, 12, 12))
         self.wall = pygame.draw.rect(self.display, LIME, pygame.Rect(self.wall_cords))
@@ -58,12 +58,16 @@ class SnakeGameAI:
         self.frame_iteration = 0
 
     def _place_food(self):
-        food_wall_overlap = False
-        x = random.randint(0, (self.w-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE 
-        y = random.randint(0, (self.h-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE
-        self.food = Point(x, y)
-        if self.food in self.snake:
-            self._place_food()
+        food_wall_overlap = True
+        while food_wall_overlap == True:
+            x = random.randint(0, (self.w-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE 
+            y = random.randint(0, (self.h-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE
+            self.food = Point(x, y)
+            self.wall = pygame.draw.rect(self.display, LIME, pygame.Rect(self.wall_cords))
+            if not self.wall.collidepoint(x, y):
+                food_wall_overlap = False
+            if self.food in self.snake:
+                self._place_food()
         
     def play_step(self, action):
         self.frame_iteration += 1
