@@ -78,7 +78,7 @@ class Agent:
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
-        #for state, action, reward, nexrt_state, done in mini_sample:
+        #for state, action, reward, next_state, done in mini_sample:
         #    self.trainer.train_step(state, action, reward, next_state, done)
 
     def train_short_memory(self, state, action, reward, next_state, done):
@@ -94,9 +94,12 @@ class Agent:
         else:
             state0 = torch.tensor(state, dtype=torch.float)
             prediction = self.model(state0)
+            print(prediction)
+            print(torch.argmax(prediction))
             move = torch.argmax(prediction).item()
+            print(move)
             final_move[move] = 1
-
+            print(final_move)
         return final_move
 
 
@@ -110,10 +113,8 @@ def train():
     while True:
         # get old state
         state_old = agent.get_state(game)
-
         # get move
         final_move = agent.get_action(state_old)
-
         # perform move and get new state
         reward, done, score = game.play_step(final_move)
         state_new = agent.get_state(game)

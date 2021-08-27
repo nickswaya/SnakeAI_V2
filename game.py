@@ -146,7 +146,6 @@ class SnakeGameAI:
 
         clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
         idx = clock_wise.index(self.direction)
-
         if np.array_equal(action, [1, 0, 0]):
             new_dir = clock_wise[idx] # no change
         elif np.array_equal(action, [0, 1, 0]):
