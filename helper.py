@@ -18,3 +18,4 @@ def plot(scores, mean_scores):
     plt.legend()
     plt.show(block=False)
     plt.pause(.1)
+    plt.savefig('score')
